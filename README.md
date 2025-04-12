@@ -59,7 +59,7 @@ To modify or enhance the extension:
 
 ## Version
 
-Current version: 1.1.0
+Current version: 1.2.0
 
 ## License
 
