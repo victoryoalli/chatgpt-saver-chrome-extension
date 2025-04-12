@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>ChatGPT Saved Chats</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			margin: 0;
+			padding: 20px;
+			background-color: #f8f9fa;
+			color: #333;
+		}
+
+		.container {
+			max-width: 900px;
+			margin: 0 auto;
+			background-color: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+		}
+
+		header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding-bottom: 15px;
+			margin-bottom: 20px;
+			border-bottom: 1px solid #eee;
+		}
+
+		h1 {
+			margin: 0;
+			color: #10a37f;
+			font-size: 24px;
+		}
+
+		.filter-section {
+			display: flex;
+			align-items: center;
+			margin-bottom: 20px;
+			padding: 10px;
+			background-color: #f0f0f0;
+			border-radius: 6px;
+		}
+
+		.filter-section label {
+			margin-right: 10px;
+			font-weight: 500;
+		}
+
+		.filter-section input {
+			flex-grow: 1;
+			padding: 8px 12px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			font-size: 14px;
+			max-width: 250px;
+			margin-right: 10px;
+		}
+
+		.filter-section button {
+			padding: 8px 16px;
+			background-color: #10a37f;
+			color: white;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-weight: 500;
+			transition: background-color 0.2s;
+		}
+
+		.filter-section button:hover {
+			background-color: #0d8c6c;
+		}
+
+		.label-section {
+			margin-bottom: 30px;
+		}
+
+		.label-header {
+			color: #10a37f;
+			padding-bottom: 8px;
+			border-bottom: 2px solid #eee;
+			margin-bottom: 10px;
+			font-size: 18px;
+		}
+
+		.chat-item {
+			display: flex;
+			flex-direction: column;
+			background-color: #f9f9f9;
+			border-radius: 6px;
+			padding: 16px;
+			margin-bottom: 10px;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			transition: transform 0.2s, box-shadow 0.2s;
+		}
+
+		.chat-item:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+		}
+
+		.chat-title {
+			font-weight: bold;
+			font-size: 16px;
+			margin-bottom: 5px;
+			cursor: pointer;
+			color: #2c3e50;
+		}
+
+		.chat-title:hover {
+			color: #10a37f;
+			text-decoration: underline;
+		}
+
+		.chat-meta {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 8px;
+		}
+
+		.chat-date {
+			font-size: 12px;
+			color: #666;
+		}
+
+		.chat-actions {
+			display: flex;
+			gap: 8px;
+		}
+
+		.btn {
+			padding: 6px 12px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 13px;
+			transition: background-color 0.2s;
+		}
+
+		.btn-view {
+			background-color: #2196F3;
+			color: white;
+		}
+
+		.btn-view:hover {
+			background-color: #0d8bf2;
+		}
+
+		.btn-delete {
+			background-color: #f44336;
+			color: white;
+		}
+
+		.btn-delete:hover {
+			background-color: #e53935;
+		}
+
+		.no-chats {
+			text-align: center;
+			padding: 30px;
+			color: #666;
+			font-style: italic;
+		}
+
+		.notification {
+			position: fixed;
+			top: 20px;
+			right: 20px;
+			padding: 12px 20px;
+			background-color: #10a37f;
+			color: white;
+			border-radius: 4px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+			transform: translateY(-100px);
+			opacity: 0;
+			transition: transform 0.3s, opacity 0.3s;
+			z-index: 1000;
+		}
+
+		.notification.show {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<header>
+			<h1>ChatGPT Saved Chats</h1>
+		</header>
+
+		<div class="filter-section">
+			<label for="labelFilter">Filter by label:</label>
+			<input type="text" id="labelFilter" placeholder="Enter label text...">
+			<button id="filterBtn">Filter</button>
+		</div>
+
+		<div id="chatsContainer">
+			<!-- Chats will be loaded here by JavaScript -->
+			<div class="no-chats">Loading saved chats...</div>
+		</div>
+	</div>
+
+	<div id="notification" class="notification"></div>
+
+	<script src="saved-chats.js"></script>
+</body>
+
+</html>
