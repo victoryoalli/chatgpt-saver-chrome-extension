@@ -440,13 +440,44 @@ async function loadChats(filterText = '') {
     labelSection.style.marginBottom = '24px';
 
     const labelHeader = document.createElement('div');
+    labelHeader.style.display = 'flex';
+    labelHeader.style.justifyContent = 'space-between';
+    labelHeader.style.alignItems = 'center';
     labelHeader.style.borderBottom = '2px solid #eee';
     labelHeader.style.paddingBottom = '8px';
     labelHeader.style.marginBottom = '12px';
-    labelHeader.style.color = '#10a37f';
-    labelHeader.style.fontWeight = 'bold';
-    labelHeader.style.fontSize = '18px';
-    labelHeader.textContent = label;
+
+    const labelText = document.createElement('span');
+    labelText.style.color = '#10a37f';
+    labelText.style.fontWeight = 'bold';
+    labelText.style.fontSize = '18px';
+    labelText.textContent = label;
+
+    const deleteLabel = document.createElement('button');
+    deleteLabel.innerHTML = '🗑️';
+    deleteLabel.title = `Delete all chats with label "${label}"`;
+    deleteLabel.style.background = 'none';
+    deleteLabel.style.border = 'none';
+    deleteLabel.style.fontSize = '18px';
+    deleteLabel.style.cursor = 'pointer';
+    deleteLabel.style.padding = '4px 8px';
+    deleteLabel.style.borderRadius = '4px';
+    deleteLabel.style.transition = 'background-color 0.2s ease';
+
+    deleteLabel.addEventListener('mouseover', () => {
+      deleteLabel.style.backgroundColor = '#ffebee';
+    });
+
+    deleteLabel.addEventListener('mouseout', () => {
+      deleteLabel.style.backgroundColor = 'transparent';
+    });
+
+    deleteLabel.addEventListener('click', () => {
+      deleteAllChatsByLabel(label);
+    });
+
+    labelHeader.appendChild(labelText);
+    labelHeader.appendChild(deleteLabel);
 
     labelSection.appendChild(labelHeader);
 
@@ -720,3 +751,20 @@ document.addEventListener('getExistingLabels', async function (e) {
   });
   document.dispatchEvent(responseEvent);
 });
+
+async function deleteAllChatsByLabel(label) {
+  // Create a confirmation dialog
+  const confirmed = await showConfirmationDialog(`Are you sure you want to delete all chats with label "${label}"?`);
+  if (!confirmed) return;
+
+  console.log("Deleting all chats with label:", label);
+
+  const chats = await getChatData();
+  const updatedChats = chats.filter(chat => chat.label !== label);
+
+  chrome.storage.local.set({ 'savedChats': updatedChats }, () => {
+    loadChats(document.getElementById('labelFilter').value);
+    showNotificationSafe(`All chats with label "${label}" deleted successfully`, "info");
+    console.log("Chats deleted successfully");
+  });
+}
