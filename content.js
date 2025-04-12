@@ -701,3 +701,22 @@ setTimeout(() => {
 }, 2000);
 
 console.log("Content script initialization complete");
+
+// Listen for getExistingLabels event from injected script
+document.addEventListener('getExistingLabels', async function (e) {
+  console.log("Getting existing labels");
+
+  // Get all chats from storage
+  const chats = await getChatData();
+
+  // Extract unique labels
+  const uniqueLabels = [...new Set(chats.map(chat => chat.label))].sort();
+
+  // Dispatch response event with the labels
+  const responseEvent = new CustomEvent('existingLabelsResponse', {
+    detail: {
+      labels: uniqueLabels
+    }
+  });
+  document.dispatchEvent(responseEvent);
+});

@@ -216,6 +216,13 @@ function showSaveDialog() {
 	title.style.color = '#333';
 	title.style.fontFamily = 'Arial, sans-serif';
 
+	// Create labels container
+	const labelsContainer = document.createElement('div');
+	labelsContainer.style.marginBottom = '16px';
+	labelsContainer.style.display = 'flex';
+	labelsContainer.style.flexWrap = 'wrap';
+	labelsContainer.style.gap = '8px';
+
 	// Create label input
 	const labelInput = document.createElement('input');
 	labelInput.type = 'text';
@@ -252,6 +259,58 @@ function showSaveDialog() {
 	saveButton.style.color = 'white';
 	saveButton.style.cursor = 'pointer';
 
+	// Function to create a label badge
+	function createLabelBadge(labelText) {
+		const badge = document.createElement('div');
+		badge.style.backgroundColor = '#e0f2f1';
+		badge.style.color = '#00796b';
+		badge.style.padding = '4px 12px';
+		badge.style.borderRadius = '16px';
+		badge.style.fontSize = '14px';
+		badge.style.cursor = 'pointer';
+		badge.style.transition = 'all 0.2s ease';
+		badge.textContent = labelText;
+
+		badge.addEventListener('mouseover', () => {
+			badge.style.backgroundColor = '#b2dfdb';
+		});
+
+		badge.addEventListener('mouseout', () => {
+			badge.style.backgroundColor = '#e0f2f1';
+		});
+
+		badge.addEventListener('click', () => {
+			labelInput.value = labelText;
+		});
+
+		return badge;
+	}
+
+	// Function to load existing labels
+	function loadExistingLabels() {
+		// Create and dispatch a custom event to get the labels
+		const event = new CustomEvent('getExistingLabels');
+		document.dispatchEvent(event);
+
+		// Listen for the response event
+		document.addEventListener('existingLabelsResponse', function handler(e) {
+			// Remove the listener to avoid memory leaks
+			document.removeEventListener('existingLabelsResponse', handler);
+
+			// Clear existing labels
+			labelsContainer.innerHTML = '';
+
+			// Add label badges
+			e.detail.labels.forEach(label => {
+				const badge = createLabelBadge(label);
+				labelsContainer.appendChild(badge);
+			});
+		});
+	}
+
+	// Load existing labels
+	loadExistingLabels();
+
 	// Add event listeners
 	cancelButton.addEventListener('click', () => {
 		backdrop.remove();
@@ -279,6 +338,7 @@ function showSaveDialog() {
 	buttonsContainer.appendChild(cancelButton);
 	buttonsContainer.appendChild(saveButton);
 	dialog.appendChild(title);
+	dialog.appendChild(labelsContainer);
 	dialog.appendChild(labelInput);
 	dialog.appendChild(buttonsContainer);
 	backdrop.appendChild(dialog);
